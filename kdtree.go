@@ -112,6 +112,32 @@ const (
 	StopWalking     = WalkChoice(true)
 )
 
+func (t *T) WalkInRange(r Range, fn func(t *T) WalkChoice) WalkChoice {
+	if t == nil {
+		return ContinueWalking
+	}
+	var left, right bool
+
+	if r.Max[t.split] > t.Point[t.split] {
+		right = true
+		if t.right.WalkInRange(r, fn) == StopWalking {
+			return StopWalking
+		}
+	}
+	if r.Min[t.split] < t.Point[t.split] {
+		left = true
+		if t.left.WalkInRange(r, fn) == StopWalking {
+			return StopWalking
+		}
+	}
+
+	if left && right && r.Contains(t.Point) {
+		return fn(t)
+	}
+
+	return ContinueWalking
+}
+
 // Height returns the height of the K-D tree.
 func (t *T) Height() int {
 	if t == nil {
