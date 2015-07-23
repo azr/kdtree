@@ -7,6 +7,7 @@ package kdtree
 import "sort"
 
 // K is the dimensionality of the points in this package's K-D trees.
+const K = 3
 
 // A Point is a location in K-dimensional space.
 type Point [K]float64
