@@ -150,6 +150,15 @@ func (t *T) Height() int {
 	return ht + 1
 }
 
+// Size returns the number of nodes of the K-D tree.
+func (t *T) Size() int {
+	if t == nil {
+		return 0
+	}
+
+	return 1 + t.left.Size() + t.right.Size()
+}
+
 // New returns a new K-D tree built using the given nodes.
 // Building a new tree with nodes that are already members of
 // K-D trees invalidates those trees.
