@@ -50,7 +50,7 @@ func TestInsert(t *testing.T) {
 // The test ensures that we don't panic.
 // See issue 18.
 func TestMedianTies(t *testing.T) {
-	 New([]*T{
+	New([]*T{
 		&T{Point: Point{0, 1}},
 		&T{Point: Point{0, 1}},
 		&T{Point: Point{0, 0}},
@@ -58,7 +58,7 @@ func TestMedianTies(t *testing.T) {
 	})
 
 	// This is the data that originally produced issue 18.
-	 New([]*T{
+	New([]*T{
 		&T{Point: Point{6, 9}},
 		&T{Point: Point{6, 4}},
 		&T{Point: Point{4, 6}},
@@ -238,4 +238,29 @@ func isSortedOnDim(dim int, nodes []*T) bool {
 		prev = n.Point[dim]
 	}
 	return true
+}
+
+func TestDump(t *testing.T) {
+	if len(New([]*T{
+		&T{Point: Point{6, 9}},
+		&T{Point: Point{6, 4}},
+		&T{Point: Point{4, 6}},
+		&T{Point: Point{0, 1}},
+		&T{Point: Point{0, 3}},
+		&T{Point: Point{5, 8}},
+		&T{Point: Point{2, 3}},
+		&T{Point: Point{3, 4}},
+		&T{Point: Point{2, 2}},
+		&T{Point: Point{6, 2}},
+		&T{Point: Point{2, 3}},
+		&T{Point: Point{5, 8}},
+		&T{Point: Point{2, 2}},
+		&T{Point: Point{7, 2}},
+		&T{Point: Point{8, 6}},
+		&T{Point: Point{5, 0}},
+		&T{Point: Point{1, 6}},
+		&T{Point: Point{9, 0}},
+	}).Dump()) != 18 {
+		t.Errorf("dump len is wrong")
+	}
 }

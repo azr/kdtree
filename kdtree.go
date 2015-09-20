@@ -71,6 +71,18 @@ func (t *T) insert(depth int, n *T) *T {
 	return t
 }
 
+//Dump returns everything stored in the tree in the form of an array
+func (t *T) Dump() (data []interface{}) {
+	data = append(data, t.Data)
+	if t.left != nil {
+		data = append(data, t.left.Dump()...)
+	}
+	if t.right != nil {
+		data = append(data, t.right.Dump()...)
+	}
+	return
+}
+
 // InRange appends all nodes in the K-D tree that are within a given
 // distance from the given point to the given slice, which may be nil.
 // To  avoid allocation, the slice can be pre-allocated with a larger
