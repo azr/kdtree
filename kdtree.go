@@ -53,21 +53,41 @@ func (r *Range) Contains(pt Point) bool {
 // Insert returns a new K-D tree with the given node inserted.
 // Inserting a node that is already a member of a K-D tree
 // invalidates that tree.
+//
+// t can be nil
 func (t *T) Insert(n *T) *T {
-	return t.insert(0, n)
-}
-
-func (t *T) insert(depth int, n *T) *T {
+	n.left, n.right = nil, nil
 	if t == nil {
-		n.split = depth % K
-		n.left, n.right = nil, nil
+		n.split = 0
 		return n
 	}
-	if n.Point[t.split] < t.Point[t.split] {
-		t.left = t.left.insert(depth+1, n)
-	} else {
-		t.right = t.right.insert(depth+1, n)
+	return t.insert(n)
+}
+
+func (t *T) insert(n *T) *T {
+	depth := 0
+
+	for curr := t; ; depth++ {
+		if n.Point[curr.split] < curr.Point[curr.split] {
+			if curr.left == nil {
+				n.split = depth % K
+				curr.left = n
+				break
+			} else {
+				curr = curr.left
+			}
+		} else {
+			if curr.right == nil {
+				n.split = depth % K
+				curr.right = n
+				break
+			} else {
+				curr = curr.right
+			}
+		}
+
 	}
+
 	return t
 }
 
