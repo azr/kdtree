@@ -4,6 +4,7 @@ import (
 	"math"
 	"math/rand"
 	"reflect"
+	"sync"
 	"testing"
 	"testing/quick"
 )
@@ -37,6 +38,10 @@ func TestInsert(t *testing.T) {
 		var tree *T
 		for _, p := range pts {
 			tree = tree.Insert(&T{Point: p})
+		}
+		if tree.Size() != len(pts) {
+			t.Errorf("tree.Size() != len(pts): %d, %d", tree.Size(), len(pts))
+			return false
 		}
 		_, ok := tree.invariantHolds()
 		return ok
@@ -263,4 +268,42 @@ func TestDump(t *testing.T) {
 	}).Dump()) != 18 {
 		t.Errorf("dump len is wrong")
 	}
+}
+
+func TestRaces(t *testing.T) {
+	tr := New([]*T{
+		&T{Point: Point{6, 9}},
+		&T{Point: Point{6, 4}},
+		&T{Point: Point{4, 6}},
+		&T{Point: Point{0, 1}},
+		&T{Point: Point{0, 3}},
+		&T{Point: Point{5, 8}},
+		&T{Point: Point{2, 3}},
+		&T{Point: Point{3, 4}},
+		&T{Point: Point{2, 2}},
+		&T{Point: Point{6, 2}},
+		&T{Point: Point{2, 3}},
+		&T{Point: Point{5, 8}},
+		&T{Point: Point{2, 2}},
+		&T{Point: Point{7, 2}},
+		&T{Point: Point{8, 6}},
+		&T{Point: Point{5, 0}},
+		&T{Point: Point{1, 6}},
+		&T{Point: Point{9, 0}},
+	})
+
+	wg := sync.WaitGroup{}
+
+	raceFn := func() {
+		tr.Insert(&T{Point: Point{42, 42}})
+		tr.Size()
+		wg.Done()
+	}
+
+	l := 3
+	wg.Add(l)
+	for i := 0; i < l; i++ {
+		go raceFn()
+	}
+	wg.Wait()
 }
