@@ -92,8 +92,8 @@ func (t *T) insert(n *T) *T {
 }
 
 //Dump returns everything stored in the tree in the form of an array
-func (t *T) Dump() (data []interface{}) {
-	data = append(data, t.Data)
+func (t *T) Dump() (data []*T) {
+	data = append(data, t)
 	if t.left != nil {
 		data = append(data, t.left.Dump()...)
 	}
