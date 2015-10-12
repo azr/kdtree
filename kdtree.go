@@ -93,6 +93,9 @@ func (t *T) insert(n *T) *T {
 
 //Dump returns everything stored in the tree in the form of an array
 func (t *T) Dump() (data []*T) {
+	if t == nil {
+		return nil
+	}
 	data = append(data, t)
 	if t.left != nil {
 		data = append(data, t.left.Dump()...)
